@@ -1,23 +1,27 @@
-import logo from './logo.svg';
+import React,{useEffect,useState} from "react";
 import './App.css';
 
 function App() {
+  const [products,setProducts]=useState(null);
+  const [subscriptions, setSubscriptions] = useState(null);
+  useEffect(()=>{
+    fetch('https://mystifying-spence-dc3bda.netlify.app/build-a-box/products.json')
+    .then(data=>data.json())
+    .then(json=>{
+      setProducts(json.products)
+    })
+
+    fetch('https://mystifying-spence-dc3bda.netlify.app/build-a-box/subscriptions.json')
+    .then(data=>data.json())
+    .then(json=>{
+      setSubscriptions(json.subscriptions)
+    })
+  },[])
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      Hello World!
+      {subscriptions?<>{subscriptions[0].name}</>:<>loading subscriptions...</>}
+      {products?<>{products[0].name}</>:<>loading products...</>}
     </div>
   );
 }
