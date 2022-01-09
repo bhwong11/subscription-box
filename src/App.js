@@ -22,6 +22,7 @@ function App() {
     .then(data=>data.json())
     .then(json=>{
       setProducts(json.products)
+      setProductsAmount(json.products.map(product=>0))
     })
 
     //fetch suscriptions array and setState for subscriptions
@@ -46,8 +47,10 @@ function App() {
           maxVolume:0,
           maxPoints:0,
         })
+        //reset product amount and total values
         setTotalPoints(0)
         setTotalVolume(0)
+        setProductsAmount(productsAmount.map(amount=>0))
       }} 
     >
       {subscriptions.map((subscription=>{
@@ -76,17 +79,21 @@ function App() {
     </div>
     {products?
     <div>
-      {products.map(product=>{
+      {products.map((product,idx)=>{
         return(
           <div>
             <Product 
             key={product.id} 
+            productIndex = {idx}
             product={product} 
             setTotalPoints={setTotalPoints} 
             setTotalVolume={setTotalVolume} 
             totalPoints = {totalPoints} 
             totalVolume={totalVolume}
-            selectedSubscription={selectedSubscription}/>
+            selectedSubscription={selectedSubscription}
+            productsAmount = {productsAmount}
+            setProductsAmount = {setProductsAmount}
+            />
           </div>
         )
       })}
