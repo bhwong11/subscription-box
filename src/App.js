@@ -4,6 +4,10 @@ import './App.css';
 function App() {
   const [products,setProducts]=useState(null);
   const [subscriptions, setSubscriptions] = useState(null);
+  const [totalPoints, setTotalPoints] = useState(0)
+  const [totalVolume,setTotalVolume] = useState(0)
+  const [pointsParam,setPointsParam] = useState(0)
+  cosnt [volumeParam,setVolumeParam] = useState(0)
   useEffect(()=>{
     fetch('https://mystifying-spence-dc3bda.netlify.app/build-a-box/products.json')
     .then(data=>data.json())
