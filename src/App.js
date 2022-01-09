@@ -3,33 +3,37 @@ import './App.css';
 import Product from './components/Product';
 
 function App() {
+  //inital state
   const [products,setProducts]=useState(null);
   const [subscriptions, setSubscriptions] = useState(null);
   const [selectedSubscriptionName,setSelectedSubscriptionName] = useState("none");
   const [selectedSubscription,setSelectedSubscription] = useState({
+    id:'none',
     maxVolume:0,
     maxPoints:0,
   });
   const [totalPoints, setTotalPoints] = useState(0)
   const [totalVolume,setTotalVolume] = useState(0)
+  const [productsAmount,setProductsAmount] = useState([])
+
   useEffect(()=>{
+    //fetch products array and setState for products
     fetch('https://mystifying-spence-dc3bda.netlify.app/build-a-box/products.json')
     .then(data=>data.json())
     .then(json=>{
       setProducts(json.products)
     })
 
+    //fetch suscriptions array and setState for subscriptions
     fetch('https://mystifying-spence-dc3bda.netlify.app/build-a-box/subscriptions.json')
     .then(data=>data.json())
     .then(json=>{
       setSubscriptions(json.subscriptions)
     })
   },[])
+
   return (
     <div className="App">
-      Hello World!
-      {subscriptions?<>{subscriptions[0].name}</>:<>loading subscriptions...</>}
-      {products?<>{products[0].name}</>:<>loading products...</>}
 
       {/* select subscription box */}
       {subscriptions?
@@ -37,18 +41,30 @@ function App() {
       value={selectedSubscriptionName} 
       onChange={(e)=>{
         setSelectedSubscriptionName(e.target.value)
-        setSelectedSubscription(subscriptions.find(i=>i.id===e.target.value))
+        setSelectedSubscription(subscriptions.find(i=>i.id===e.target.value) || {
+          id:'none',
+          maxVolume:0,
+          maxPoints:0,
+        })
+        setTotalPoints(0)
+        setTotalVolume(0)
       }} 
     >
-      <option value="none">(select a box)</option>
       {subscriptions.map((subscription=>{
         return <option value={subscription.id}>{subscription.name}</option>
       }))}
+      <option value={'none'}>(Select A Subscription Size)</option>
     </select>:
-    <div>loading subscriptions</div>
+    <div>loading subscriptions...</div>
       }
       <div>
-        {selectedSubscription?<>{selectedSubscription.name}{console.log(selectedSubscription)}</>:<>select a box</>}
+        {selectedSubscription.id!=='none'?
+        <div>
+          {selectedSubscription.name}
+          <div>max points: {selectedSubscription.maxValue}</div>
+          <div>max volume: {selectedSubscription.maxVolume}</div>
+        </div>:
+        <div>select a box</div>}
       </div>
 
     {/* products */}
@@ -63,29 +79,6 @@ function App() {
       {products.map(product=>{
         return(
           <div>
-          {products.name}
-          {product.description}
-          {product.volume}
-          {product.points}
-            <div>
-              <span onClick={(e)=>{
-                if(totalPoints+product.points<=selectedSubscription.maxValue && totalVolume+product.volume<=selectedSubscription.maxVolume){
-                  setTotalPoints(totalPoints+product.points)
-                  setTotalVolume(totalVolume+product.volume)
-                }
-              }}>+</span>
-              <span onClick={(e)=>{
-                if(totalPoints-product.points>0 && totalVolume-product.volume>0){
-                  setTotalPoints(totalPoints-product.points)
-                  setTotalVolume(totalVolume-product.volume)
-                }else{
-                  setTotalPoints(0)
-                  setTotalVolume(0)                 
-                }
-
-              }}>-</span>
-            </div>
-
             <Product 
             key={product.id} 
             product={product} 
