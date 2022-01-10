@@ -10,6 +10,7 @@ function App() {
   const [selectedSubscriptionName,setSelectedSubscriptionName] = useState("none");
   const [selectedSubscription,setSelectedSubscription] = useState({
     id:'none',
+    name:'none',
     maxVolume:0,
     maxValue:0,
   });
@@ -40,56 +41,63 @@ function App() {
     <div className="App">
 
       {/* select subscription box */}
-      {subscriptions?
-      <select 
-      value={selectedSubscriptionName} 
-      onChange={(e)=>{
-        //get selected subscription
-        setSelectedSubscriptionName(e.target.value)
-        setSelectedSubscription(subscriptions.find(i=>i.id===e.target.value) || {
-          id:'none',
-          maxVolume:0,
-          maxPoints:0,
-        })
-        //reset product amount and total values
-        setTotalPoints(0)
-        setTotalVolume(0)
-        setProductsAmount(productsAmount.map(amount=>0))
-      }} 
-    >
-      {subscriptions.map((subscription=>{
-        return <option value={subscription.id}>{subscription.name}</option>
-      }))}
-      <option value={'none'}>(Select A Subscription Size)</option>
-    </select>:
-    <div>loading subscription sizes...</div>
-      }
-      <div>
+      <div className="subscriptions-section">
+        {subscriptions?
+        <select 
+        value={selectedSubscriptionName} 
+        onChange={(e)=>{
+          //get selected subscription
+          setSelectedSubscriptionName(e.target.value)
+          setSelectedSubscription(subscriptions.find(i=>i.id===e.target.value) || {
+            id:'none',
+            name:'none',
+            maxVolume:0,
+            maxPoints:0,
+          })
+          //reset product amount and total values
+          setTotalPoints(0)
+          setTotalVolume(0)
+          setProductsAmount(productsAmount.map(amount=>0))
+        }} 
+      >
+        {subscriptions.map((subscription=>{
+          return <option value={subscription.id}>{subscription.name}</option>
+        }))}
+        <option selected disabled value={'none'}>(Select A Subscription Size)</option>
+      </select>:
+      <div>loading subscription sizes...</div>
+        }
+
+
+      <div className="subscription-info-container">
         {selectedSubscription.id!=='none'?
         <div>
-          {selectedSubscription.name}
-          <div>max points for this size: {selectedSubscription.maxValue}</div>
-          <div>max volume for this size: {selectedSubscription.maxVolume}</div>
+          <div>Subscription Size Selected: <b>{selectedSubscription.name}</b></div>
+          <div>max points for this size: <b>{selectedSubscription.maxValue}</b></div>
+          <div>max volume for this size: <b>{selectedSubscription.maxVolume}</b></div>
         </div>:
-        <div>Select A Subscription Size To Get Started!</div>}
+        <div><h3>Select A Subscription Size To Get Started!</h3></div>}
       </div>
-
-    {/* products */}
-    <div>
-    Total Points Added To Box: {totalPoints}/{selectedSubscription.maxValue}
     </div>
-    <div>
-    Total Volume Added To Box: {totalVolume}/{selectedSubscription.maxValue}
+    {/* products */}
+    <div className="total-values-container">
+      <div>
+      Total Points Added To Box: <b>{totalPoints}/{selectedSubscription.maxValue}</b>
+      </div>
+      <div>
+      Total Volume Added To Box: <b>{totalVolume}/{selectedSubscription.maxVolume}</b>
+      </div>
     </div>
     
-      {categories?<div>
 
+      {categories?<div className="categories">
       {categories.map(category=>{
         return(
           <>
             <div>
               <b>Category: {category.name}</b>
             </div>
+            <div className="products-container">
             {products?products.filter(product=>product.category.id===category.id).map((product,idx)=>{
             return(
               <div>
@@ -108,17 +116,20 @@ function App() {
               </div>
             )
           }):<>loading products...</>}
+          </div>
           </>
         )
-      })}</div>:<>loading...</>}
+      })}</div>:<div>loading...</div>}
 
 
     {/* save button */}
-    <button
-    disabled={totalPoints===0 || totalVolume===0}
-    >
-      Save
-    </button>
+    <div className="save-container">
+      <button className="save-button" disabled={totalPoints===0 || totalVolume===0}>
+        Save
+      </button>
+    </div>
+
+
     </div>
   );
 }
