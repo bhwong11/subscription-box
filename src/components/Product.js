@@ -18,7 +18,9 @@ const Product =({
         <div>volume: {product.volume}</div>
         <div>points: {product.points}</div>
           <div>
-            <span onClick={(e)=>{
+            <button 
+            disabled={!(totalPoints+product.points<=selectedSubscription.maxValue && totalVolume+product.volume<=selectedSubscription.maxVolume)}
+            onClick={(e)=>{
               if(totalPoints+product.points<=selectedSubscription.maxValue && totalVolume+product.volume<=selectedSubscription.maxVolume){
                 setTotalPoints(totalPoints+product.points)
                 setTotalVolume(totalVolume+product.volume)
@@ -26,10 +28,12 @@ const Product =({
                 productsAmountCopy[productIndex]++
                 setProductsAmount(productsAmountCopy)
               }
-            }}>+</span>
+            }}>+</button>
             products amount: {productsAmount[productIndex]}
-            <span onClick={(e)=>{
-              if(totalPoints-product.points>0 && totalVolume-product.volume>0){
+            <button 
+            disabled={!(productsAmount[productIndex])}
+            onClick={(e)=>{
+              if(totalPoints-product.points>=0 && totalVolume-product.volume>=0){
                 setTotalPoints(totalPoints-product.points)
                 setTotalVolume(totalVolume-product.volume)
                 const productsAmountCopy = [...productsAmount]
@@ -43,7 +47,7 @@ const Product =({
                 setProductsAmount(productsAmountCopy)               
               }
 
-            }}>-</span>
+            }}>-</button>
           </div>
         </div>
     )
