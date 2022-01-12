@@ -91,19 +91,22 @@ function App() {
     
 
       {categories?<div className="categories">
-      {categories.map(category=>{
+      {categories.map((category,categoryIdx)=>{
         return(
           <>
             <div>
               <b>Category: {category.name}</b>
             </div>
             <div className="products-container">
-            {products?products.filter(product=>product.category.id===category.id).map((product,idx)=>{
+            {products?products.filter(product=>product.category.id===category.id).map((product,productIdx)=>{
+            console.log('INDEX',productIdx+categoryIdx)
+            console.log('Product INDEX',productIdx)
+            console.log('cate INDEX',categoryIdx)
             return(
               <div>
                 <Product 
                 key={product.id} 
-                productIndex = {idx}
+                productIndex = {productIdx+(categoryIdx*3)}
                 product={product} 
                 setTotalPoints={setTotalPoints} 
                 setTotalVolume={setTotalVolume} 
